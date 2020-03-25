@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+</head>
+<body>
+    用户名：<input type="text" placeholder="请输入用户名......" id="username"><br>
+    密码：<input type="password" id="password"><br>
+    验证码：<input type="text" id="code"><button onclick="getCode()">获取验证码</button><br>
+    <button onclick="regist()">注册</button>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var username = document.getElementById('username')
+    var password = document.getElementById('password')
+    var code = document.getElementById('code')
+    function regist() {
+        axios.post('http://localhost:3000/user/regist', {
+            username: username.value,
+            password: password.value,
+            code: +code.value,
+        })
+        .then((response) => {
+            window.location.href='./login.html';
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+    }
+    function getCode() {
+        axios.post('http://localhost:3000/user/getMailCode', {
+            mail: username.value
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+</script>
+</html>

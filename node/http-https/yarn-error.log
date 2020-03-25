@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/local/Cellar/node/13.2.0/bin/node /Users/wangting/.yarn/bin/yarn.js init --ye
+
+PATH: 
+  /Users/wangting/.yarn/bin:/Users/wangting/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/wangting/.yarn/bin:/Users/wangting/.config/yarn/global/node_modules/.bin
+
+Yarn version: 
+  1.19.1
+
+Node version: 
+  13.2.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/Users/wangting/.yarn/lib/cli.js:136824:13)
+      at Interface.emit (events.js:210:5)
+      at Interface._ttyWrite (readline.js:885:16)
+      at ReadStream.onkeypress (readline.js:191:10)
+      at ReadStream.emit (events.js:210:5)
+      at emitKeys (internal/readline/utils.js:433:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1151:36)
+      at ReadStream.emit (events.js:210:5)
+      at addChunk (_stream_readable.js:326:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

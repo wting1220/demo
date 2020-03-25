@@ -1,0 +1,165 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+<title>添加</title>
+<style>
+    #photo {
+        width: 200px;
+        height: 200px;
+    }
+</style>
+</head>
+<body>
+<div class="page-container">
+    <form method="post" class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>菜名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" id="name">
+			</div>
+        </div>
+        <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" id="price">
+			</div>
+        </div>
+        <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" id="desc">
+			</div>
+        </div>
+        <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类别：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select class="input-text" value="" id="typeId">
+                    <option value=1>热菜</option>
+                    <option value=2>凉菜</option>
+                    <option value=3>酒水</option>
+                </select>
+			</div>
+        </div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片上传：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="image" style="display: inline-block;" onchange="upload()">
+                <img src="" id="photo" style="display: none;">
+                <button id="delBtn" style="width: 100px;" onclick="delImg()">删除</button>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button onClick="save()" class="btn btn-primary radius" type="button">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<a href="./food-show.html" class="btn btn-default radius">&nbsp;&nbsp;取消&nbsp;&nbsp;</a>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./commen.js"></script>
+<script >
+    var foodName = document.getElementById('name');
+    var price = document.getElementById('price');
+    var desc = document.getElementById('desc')
+    var typeId = document.getElementById('typeId')
+    var image = document.getElementById('image')
+    var photo = document.getElementById('photo')
+    var delBtn = document.getElementById('delBtn')
+    var url = ''
+
+    function save() {
+        if (GetRequest().id) {
+            console.log(file)
+            axios.post('http://localhost:3000/food/update',{
+                id: GetRequest().id,
+                name: foodName.value,
+                price: price.value,
+                desc: desc.value,
+                typeId: +typeId.value,
+                image: url,
+            })
+            .then(() => {
+                window.location.href = './food-show.html'
+            })
+            .catch(() => {
+                alert('修改失败')
+            })
+        } else {
+            axios.post('http://localhost:3000/food/add',{
+                name: foodName.value,
+                price: price.value,
+                desc: desc.value,
+                typeId: +typeId.value,
+                image: url,
+            })
+            .then((data) => {
+                window.location.href = './food-show.html'
+            })
+            .catch(() => {
+                alert('添加失败')
+            })
+        }
+    }    
+
+    window.onload = () => {
+        if (GetRequest().id) {
+            axios.get(`http://localhost:3000/food/select?id=${GetRequest().id}`)
+            .then((data) => {
+                photo.style.display = 'block'
+                image.style.display = 'none'
+                let res = data.data.data[0]
+                foodName.value = res.name
+                price.value = res.price
+                desc.value = res.desc
+                typeId.value = res.typeId
+                photo.src = `http://localhost:3000${res.image}`
+            })
+        }
+    }
+
+    function upload() {
+        console.log(image.files[0])
+        let file = image.files[0]
+        let formdata = new FormData()
+        formdata.append('logo', file)
+        axios.post('http://localhost:3000/file/upload', formdata)
+        .then((data) => {
+            url = data.data.data
+            photo.style.display = 'block'
+            image.style.display = 'none'
+            photo.src = `http://localhost:3000${url}`
+        })
+    }
+
+    function delImg() {
+        photo.style.display = 'none'
+        image.style.display = 'block'
+        delBtn.style.display = 'none'
+    }
+</script>
+</body>
+</html>

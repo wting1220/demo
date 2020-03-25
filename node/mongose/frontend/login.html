@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登陆</title>
+    <style>
+        input {
+            margin: 10px;
+            padding: 5px;
+        }
+        button {
+            border: 1px solid #eeeeee;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body style="width: 400px; height: 200px;margin: auto;">
+    用户名：<input type="text" placeholder="请输入用户名......" id="username"><br>
+    密&nbsp;&nbsp;&nbsp;码：<input type="password" id="password"><br>
+    <button onclick="login()">登陆</button>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var username = document.getElementById('username')
+    var password = document.getElementById('password')
+    function login() {
+        axios.post('http://localhost:3000/user/login', {
+            username: username.value,
+            password: password.value,
+        })
+        .then((response) => {
+            window.location.href = './food-show.html'
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+    }
+</script>
+</html>
